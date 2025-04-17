@@ -13,6 +13,7 @@ docker-compose for service orchestration
 Volumes for persistent storage and logs
 
 📅 Project Structure
+
 springboot-tomcat-app/
 ├── Dockerfile
 ├── docker-compose.yml
@@ -28,7 +29,9 @@ springboot-tomcat-app/
 │       └── resources/
 │           └── application.properties
 
-🔧 Step-by-Step Instructions   // Clone it or do it maual steps
+🔧 Step-by-Step Instructions   
+// Clone it or do it maual steps
+
 1.mkdir springboot-tomcat-app && cd springboot-tomcat-app
 2. Create pom.xml  / add data from my repo
 3. Create  Java Code -> DemoApplication.java
@@ -45,6 +48,7 @@ Build and Run with Docker Compose
 docker compose up --build
 curl http://localhost:8080/users
 output : --
+
 [
   { "id": 1, "name": "Alice" },
   { "id": 2, "name": "Bob" }
