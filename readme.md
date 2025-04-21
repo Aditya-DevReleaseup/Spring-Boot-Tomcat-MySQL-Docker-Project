@@ -9,7 +9,6 @@ Preloaded data (Alice and Bob)
 Dockerfile with multi-stage build
 
 docker-compose for service orchestration
-
 Volumes for persistent storage and logs
 
 📅 Project Structure
