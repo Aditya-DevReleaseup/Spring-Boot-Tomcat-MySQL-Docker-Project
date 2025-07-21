@@ -20,7 +20,5 @@ jobs:
       - name: Start services for testing
         run: sudo docker compose up -d
 
-      - name: Wait and check containers
-        run: docker ps -a
-
+ 
     
