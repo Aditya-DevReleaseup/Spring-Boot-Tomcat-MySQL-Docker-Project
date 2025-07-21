@@ -1,31 +1,7 @@
 version: '3.8'
 
-services:
-  traefik:
-    image: traefik:v2.10
-    container_name: traefik
-    restart: unless-stopped
-    command:
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.leresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.leresolver.acme.email=YOUR_EMAIL@example.com"
-      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
-
-    ports:
-      - "80:80"
-      - "443:443"
-      # Uncomment next line if you want the Traefik dashboard
-      # - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./traefik/letsencrypt:/letsencrypt"
-    networks:
-      - web
+networks:
+     - web
 
   frontend:
     build: ./frontend
