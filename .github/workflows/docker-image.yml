@@ -18,7 +18,7 @@ jobs:
         run: docker-compose build
 
       - name: Start services for testing
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Wait and check containers
         run: docker ps -a
