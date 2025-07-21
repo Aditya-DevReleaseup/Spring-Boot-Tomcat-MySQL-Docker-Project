@@ -1,0 +1,38 @@
+name: Build and Deploy Locally
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          load: true
+          tags: todo-backend:latest
+
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          load: true
+          tags: todo-frontend:latest
+
+      - name: Integration testing (optional)
+        run: |
+          docker run -d --name backend -p 8080:8080 todo-backend:latest
+          docker run -d --name frontend -p 3000:3000 todo-frontend:latest
+          
+
+    
