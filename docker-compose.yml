@@ -1,8 +1,6 @@
 version: '3.8'
 
-networks:
-     - web
-
+services:
   frontend:
     build: ./frontend
     container_name: todo-frontend
@@ -15,6 +13,8 @@ networks:
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
     networks:
       - web
+    depends_on:
+      - backend
 
   backend:
     build: ./backend
@@ -55,6 +55,6 @@ volumes:
 
 networks:
   web:
-    external: false
+    external: true      # Connects to the existing 'web' network used by Traefik
   internal:
-    internal: true
+    internal: true      # For private backend/database communication
