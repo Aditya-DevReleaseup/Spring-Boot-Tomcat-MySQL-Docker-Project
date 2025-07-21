@@ -1,38 +1,26 @@
-name: Build and Deploy Locally
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: self-hosted
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Build Docker services
+        run: docker-compose build
 
-      - name: Build backend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          load: true
-          tags: todo-backend:latest
+      - name: Start services for testing
+        run: docker-compose up -d
 
-      - name: Build frontend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          load: true
-          tags: todo-frontend:latest
-
-      - name: Integration testing (optional)
-        run: |
-          docker run -d --name backend -p 8080:8080 todo-backend:latest
-          docker run -d --name frontend -p 3000:3000 todo-frontend:latest
-          
+      - name: Wait and check containers
+        run: docker ps -a
 
     
