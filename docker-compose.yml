@@ -1,72 +1,84 @@
-version: "3.8"
+version: '3.8'
 
 services:
-  db:
-    image: mysql:8
-    container_name: todo-mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpass
-      MYSQL_DATABASE: todoapp
-      MYSQL_USER: todo
-      MYSQL_PASSWORD: todopass
-    volumes:
-      - db-data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - traefiknet
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.leresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.leresolver.acme.email=YOUR_EMAIL@example.com"
+      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
 
-  backend:
-    build: ./backend
-    container_name: todo-backend
-    depends_on:
-      - db
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/todoapp
-      SPRING_DATASOURCE_USERNAME: todo
-      SPRING_DATASOURCE_PASSWORD: todopass
     ports:
-      - "8080:8080"
+      - "80:80"
+      - "443:443"
+      # Uncomment next line if you want the Traefik dashboard
+      # - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/letsencrypt:/letsencrypt"
     networks:
-      - traefiknet
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.todo.localhost`)"
-      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+      - web
 
   frontend:
     build: ./frontend
     container_name: todo-frontend
-    depends_on:
-      - backend
-    ports:
-      - "3000:3000"
-    networks:
-      - traefiknet
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`todo.localhost`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
-
-  traefik:
-    image: traefik:latest
-    container_name: todo-traefik
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "8081:8080" # Traefik dashboard
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.yml:/traefik.yml
+      - "traefik.http.routers.frontend.rule=Host(`to-do.devclouds.site`)"
+      - "traefik.http.routers.frontend.entrypoints=web,websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=leresolver"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
     networks:
-      - traefiknet
+      - web
+
+  backend:
+    build: ./backend
+    container_name: todo-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/todoapp
+      SPRING_DATASOURCE_USERNAME: todo
+      SPRING_DATASOURCE_PASSWORD: todopass
+    depends_on:
+      - db
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.to-do.devclouds.site`)"
+      - "traefik.http.routers.backend.entrypoints=web,websecure"
+      - "traefik.http.routers.backend.tls.certresolver=leresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+    networks:
+      - web
+      - internal
+
+  db:
+    image: mysql:8
+    container_name: todo-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: todoapp
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: todo
+      MYSQL_PASSWORD: todopass
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - internal
 
 volumes:
   db-data:
 
 networks:
-  traefiknet:
+  web:
+    external: false
+  internal:
+    internal: true
