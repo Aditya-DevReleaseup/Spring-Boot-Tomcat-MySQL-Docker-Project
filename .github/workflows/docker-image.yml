@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main1]
   pull_request:
     branches: [main]
 
@@ -15,7 +15,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker services
-        run: sudo docker compose build
+        run: |
+         sudo docker stop todo-frontend
+         sudo docker stop todo-mysql
+         sudo docker stop todo-traefik
+         sudo docker rm todo-frontend 
+         
+         sudo docker rm todo-traefik
+         sudo docker system prune -a -f 
+   
+         sudo docker compose build
 
       - name: Start services for testing
         run: sudo docker compose up -d
