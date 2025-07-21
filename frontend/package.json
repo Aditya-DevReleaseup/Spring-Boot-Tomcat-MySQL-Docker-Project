@@ -1,0 +1,17 @@
+{
+  "name": "todo-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^5.0.1",
+    "axios": "^1.6.0",
+    "styled-components": "^6.0.0", // Or use Material-UI, Chakra, etc.
+    "@emotion/react": "^11.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
