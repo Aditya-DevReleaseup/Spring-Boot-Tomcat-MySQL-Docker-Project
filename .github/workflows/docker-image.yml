@@ -13,21 +13,25 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: remove old Backend and frontend containers
-        run: |
-         sudo docker stop todo-frontend
-         sudo docker stop todo-backend
-         sudo docker rm todo-frontend 
-         sudo docker rm todo-backend
-         sudo docker system prune -a -f
         
-        
-
       - name: Build Docker services and Start services container
         run: |
-         sudo docker compose build
-         sudo docker compose up -d
+          sudo docker compose build
+          sudo docker compose up -d
+
+        
+        
+
+      
+    
+
+            #   - name: remove old Backend and frontend containers
+    #    run: |
+        # sudo docker stop todo-frontend
+        # sudo docker stop todo-backend
+         #sudo docker rm todo-frontend 
+        # sudo docker rm todo-backend
+        # sudo docker system prune -a -f
         
          
          
