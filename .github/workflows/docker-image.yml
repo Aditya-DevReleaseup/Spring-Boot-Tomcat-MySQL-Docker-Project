@@ -1,40 +1,38 @@
-name: CI/CD Pipeline
+name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main1
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build-and-test:
+  build-deploy:
     runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Build Docker services and Start services container
+
+      # Stop and remove containers if running (ignore errors)
+      - name: Stop existing containers
         run: |
-          sudo docker compose build
-          sudo docker compose up -d
+          docker stop todo-backend
+          docker stop todo-frontend
+          docker rm todo-backend
+          docker rm todo-frontend 
+          docker system prune -a -f 
 
-        
-        
+      - name: Build backend image
+        run: docker build -t todo-backend ./backend
 
-      
-    
+      - name: Build frontend image
+        run: docker build -t todo-frontend ./frontend
 
-            #   - name: remove old Backend and frontend containers
-    #    run: |
-        # sudo docker stop todo-frontend
-        # sudo docker stop todo-backend
-         #sudo docker rm todo-frontend 
-        # sudo docker rm todo-backend
-        # sudo docker system prune -a -f
-        
-         
-         
-         #sudo docker rm todo-traefik
- 
-    
+      - name: Start containers
+        run: docker-compose -f docker-compose.yml up -d
+
+      - name: List running containers
+        run: docker ps
