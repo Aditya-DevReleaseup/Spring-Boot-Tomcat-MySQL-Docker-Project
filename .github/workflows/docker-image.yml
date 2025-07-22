@@ -19,10 +19,7 @@ jobs:
       # Stop and remove containers if running (ignore errors)
       - name: Stop existing containers
         run: |
-          docker stop todo-backend
-          docker stop todo-frontend
-          docker rm todo-backend
-          docker rm todo-frontend 
+         
           docker system prune -a -f 
 
       - name: Build backend image
@@ -32,7 +29,13 @@ jobs:
         run: docker build -t todo-frontend ./frontend
 
       - name: Start containers
-        run: docker-compose -f docker-compose.yml up -d
+        run: docker compose -f docker-compose.yml up -d
 
       - name: List running containers
         run: docker ps
+
+
+       #  docker stop todo-backend
+    #      docker stop todo-frontend
+     #     docker rm todo-backend
+      #    docker rm todo-frontend 
