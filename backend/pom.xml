@@ -30,7 +30,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Add your dependencies here -->
+        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -43,12 +43,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!-- MySQL Connector -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
             <scope>runtime</scope>
         </dependency>
+        <!-- Lombok (optional, recommended) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -57,7 +59,7 @@
     </dependencies>
 
     <build>
-        <finalName>app</finalName> <!-- <--- Jar file will be app.jar every time -->
+        <finalName>app</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
