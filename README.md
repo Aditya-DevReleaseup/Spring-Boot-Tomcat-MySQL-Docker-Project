@@ -1,6 +1,9 @@
 # Spring Boot, React, MySQL, Docker Compose, and Traefik - To-Do App
-- App UI: http://todo.localhost
-- API: http://api.todo.localhost
+
+- App Online : https://to-do.devclouds.site
+
+- API Local : http://todo.localhost
+- API Local : http://api.todo.localhost
   
 ## Run Locally
 
