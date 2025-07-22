@@ -2,8 +2,7 @@
 
 - App Online : https://to-do.devclouds.site
 
-- API Local : http://todo.localhost
-- API Local : http://api.todo.localhost
+
   
 ## Run Locally
 
@@ -23,8 +22,8 @@
     docker compose up --build
     ```
 
-- App UI: http://todo.localhost
-- API: http://api.todo.localhost
+- API Local : http://todo.localhost
+- API Local : http://api.todo.localhost
 - Traefik Dashboard: http://localhost:8081
 
 ### Notes
